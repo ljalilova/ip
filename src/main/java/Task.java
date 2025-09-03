@@ -8,17 +8,22 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+        return (isDone ? "X" : " ");
     }
 
     public String getDescription() {
-        return description; // mark done task with X
+        return description;
     }
 
     public void setUndone() {
         isDone = false;
     }
+
     public void setDone() {
         isDone = true;
+    }
+
+    public String toString() {
+        return "[" + getStatusIcon() + "] " + description;
     }
 }
