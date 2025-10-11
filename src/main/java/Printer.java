@@ -1,38 +1,38 @@
 public class Printer {
 
-    private static final String divider = "____________________________________________________________";
+    private static final String DIVIDER = "____________________________________________________________";
 
     public static void printGreeting() {
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         System.out.println(" Hello! I'm Joel.\n What can I do for you?");
-        System.out.println(divider);
+        System.out.println(DIVIDER);
     }
 
     public static void printExitMessage() {
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         System.out.println(" Bye. Hope to see you again soon!");
-        System.out.println(divider);
+        System.out.println(DIVIDER);
     }
 
     public static void printTaskAdded(Task task, int count) {
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         System.out.println(" Got it. I've added this task:");
         System.out.println("   " + task.toString());
         System.out.println(" Now you have " + count + " tasks in the list.");
-        System.out.println(divider);
+        System.out.println(DIVIDER);
     }
 
     public static void printTaskList(Task[] tasks, int count) {
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         System.out.println(" Here are the tasks in your list:");
         for (int i = 0; i < count; i++) {
             System.out.println(" " + (i + 1) + "." + tasks[i].toString());
         }
-        System.out.println(divider);
+        System.out.println(DIVIDER);
     }
 
     public static void printUnknownCommand() {
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         System.out.println(" Sorry, I didn't understand that command.");
         System.out.println(" Try one of these:");
         System.out.println("   - todo <description>");
@@ -41,7 +41,7 @@ public class Printer {
         System.out.println("   - list");
         System.out.println("   - mark <task number>");
         System.out.println("   - unmark <task number>");
-        System.out.println(divider);
+        System.out.println(DIVIDER);
     }
 
     public static void printEmptyList() {
@@ -49,14 +49,14 @@ public class Printer {
     }
 
     public static void printMarkStatus(int index, Task task, boolean isDone) {
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         if (isDone) {
             System.out.println(" Task " + index + " has been marked completed.");
         } else {
             System.out.println(" Task " + index + " has been marked as not done.");
         }
         System.out.println("   " + task.toString());
-        System.out.println(divider);
+        System.out.println(DIVIDER);
     }
 
     public static void printNoSuchTask() {
@@ -72,17 +72,17 @@ public class Printer {
     }
 
     public static void printInvalidDeadlineFormat() {
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         System.out.println(" Invalid deadline format. Use:");
         System.out.println("   deadline <description> /by <date/time>");
-        System.out.println(divider);
+        System.out.println(DIVIDER);
     }
 
     public static void printInvalidEventFormat() {
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         System.out.println(" Invalid event format. Use:");
         System.out.println("   event <description> /from <start> /to <end>");
-        System.out.println(divider);
+        System.out.println(DIVIDER);
     }
 
 }
