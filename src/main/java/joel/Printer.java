@@ -1,5 +1,7 @@
 package joel;
 
+import java.util.ArrayList;
+
 public class Printer {
 
     private static final String DIVIDER = "____________________________________________________________";
@@ -24,11 +26,11 @@ public class Printer {
         System.out.println(DIVIDER);
     }
 
-    public static void printTaskList(Task[] tasks, int count) {
+    public static void printTaskList(ArrayList<Task> tasks) {
         System.out.println(DIVIDER);
         System.out.println(" Here are the tasks in your list:");
-        for (int i = 0; i < count; i++) {
-            System.out.println(" " + (i + 1) + "." + tasks[i].toString());
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + tasks.get(i).toString());
         }
         System.out.println(DIVIDER);
     }
@@ -87,4 +89,11 @@ public class Printer {
         System.out.println(DIVIDER);
     }
 
+    public static void printTaskDeleted(Task task, int remainingCount) {
+        System.out.println(DIVIDER);
+        System.out.println(" Noted. I've removed this task:");
+        System.out.println("   " + task.toString());
+        System.out.println(" Now you have " + remainingCount + " tasks in the list.");
+        System.out.println(DIVIDER);
+    }
 }
