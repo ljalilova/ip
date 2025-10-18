@@ -1,12 +1,13 @@
 package joel;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Joel {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int currentListIndex = 0;
+        ArrayList<Task> tasks = Storage.loadTasks();
+        int currentListIndex = tasks.size();
 
         Printer.printGreeting();
         String userInput = scanner.nextLine().trim();
@@ -15,7 +16,7 @@ public class Joel {
             String[] commandTokens = userInput.split("\\s+");
 
             if (commandTokens.length == 1 && userInput.equals("list")) {
-                if (tasks[0] == null) {
+                if (tasks.isEmpty()) {
                     Printer.printEmptyList();
                 } else {
                     Printer.printTaskList(tasks, currentListIndex);
@@ -25,14 +26,16 @@ public class Joel {
                     (commandTokens[0].equals("mark") || commandTokens[0].equals("unmark"))) {
                 try {
                     int index = Integer.parseInt(commandTokens[1]);
-                    if (tasks[index - 1] != null) {
+                    if (index >= 1 && index <= tasks.size()) {
+                        Task task = tasks.get(index - 1);
                         if (commandTokens[0].equals("mark")) {
-                            tasks[index - 1].setDone();
-                            Printer.printMarkStatus(index, tasks[index - 1], true);
+                            task.setDone();
+                            Printer.printMarkStatus(index, task, true);
                         } else {
-                            tasks[index - 1].setUndone();
-                            Printer.printMarkStatus(index, tasks[index - 1], false);
+                            task.setUndone();
+                            Printer.printMarkStatus(index, task, false);
                         }
+                        Storage.saveTasks(tasks);
                     } else {
                         Printer.printNoSuchTask();
                     }
@@ -47,8 +50,10 @@ public class Joel {
                     if (taskDesc.isEmpty()) {
                         Printer.printMissingTodoDescription();
                     } else {
-                        tasks[currentListIndex] = new ToDo(taskDesc);
-                        Printer.printTaskAdded(tasks[currentListIndex], currentListIndex + 1);
+                        Task newTask = new ToDo(taskDesc);
+                        tasks.add(newTask);
+                        Printer.printTaskAdded(newTask, tasks.size());
+                        Storage.saveTasks(tasks);
                         currentListIndex++;
                     }
                 }
@@ -58,8 +63,10 @@ public class Joel {
                     if (formatted.length == 0) {
                         Printer.printInvalidDeadlineFormat();
                     } else {
-                        tasks[currentListIndex] = new Deadline(formatted[0], formatted[1]);
-                        Printer.printTaskAdded(tasks[currentListIndex], currentListIndex + 1);
+                        Task newTask = new Deadline(formatted[0], formatted[1]);
+                        tasks.add(newTask);
+                        Printer.printTaskAdded(newTask, tasks.size());
+                        Storage.saveTasks(tasks);
                         currentListIndex++;
                     }
                 }
@@ -69,8 +76,10 @@ public class Joel {
                     if (formatted.length == 0) {
                         Printer.printInvalidEventFormat();
                     } else {
-                        tasks[currentListIndex] = new Event(formatted[0], formatted[1], formatted[2]);
-                        Printer.printTaskAdded(tasks[currentListIndex], currentListIndex + 1);
+                        Task newTask = new Event(formatted[0], formatted[1], formatted[2]);
+                        tasks.add(newTask);
+                        Printer.printTaskAdded(newTask, tasks.size());
+                        Storage.saveTasks(tasks);
                         currentListIndex++;
                     }
                 }
