@@ -88,4 +88,12 @@ public class Printer {
         System.out.println("   event <description> /from <start> /to <end>");
         System.out.println(DIVIDER);
     }
+
+    public static void printTaskDeleted(Task task, int remainingCount) {
+        System.out.println(DIVIDER);
+        System.out.println(" Noted. I've removed this task:");
+        System.out.println("   " + task.toString());
+        System.out.println(" Now you have " + remainingCount + " tasks in the list.");
+        System.out.println(DIVIDER);
+    }
 }

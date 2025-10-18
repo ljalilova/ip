@@ -19,7 +19,7 @@ public class Joel {
                 if (tasks.isEmpty()) {
                     Printer.printEmptyList();
                 } else {
-                    Printer.printTaskList(tasks, currentListIndex);
+                    Printer.printTaskList(tasks);
                 }
 
             } else if (commandTokens.length == 2 &&
@@ -36,6 +36,19 @@ public class Joel {
                             Printer.printMarkStatus(index, task, false);
                         }
                         Storage.saveTasks(tasks);
+                    } else {
+                        Printer.printNoSuchTask();
+                    }
+                } catch (NumberFormatException e) {
+                    Printer.printInvalidTaskNumber();
+                }
+
+            } else if (commandTokens[0].equals("delete") && commandTokens.length == 2) {
+                try {
+                    int index = Integer.parseInt(commandTokens[1]) - 1;
+                    if (index >= 0 && index < tasks.size()) {
+                        Task removed = tasks.remove(index);
+                        Printer.printTaskDeleted(removed, tasks.size());
                     } else {
                         Printer.printNoSuchTask();
                     }
