@@ -1,3 +1,5 @@
+package joel;
+
 import java.util.Scanner;
 
 public class Joel {

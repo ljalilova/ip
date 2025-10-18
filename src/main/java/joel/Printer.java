@@ -1,3 +1,5 @@
+package joel;
+
 public class Printer {
 
     private static final String divider = "____________________________________________________________";
