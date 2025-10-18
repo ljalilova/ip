@@ -26,10 +26,10 @@ public class Printer {
         System.out.println(DIVIDER);
     }
 
-    public static void printTaskList(ArrayList<Task> tasks) {
+    public static void printTaskList(ArrayList<Task> tasks, int count) {
         System.out.println(DIVIDER);
         System.out.println(" Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
+        for (int i = 0; i < count; i++) {
             System.out.println(" " + (i + 1) + "." + tasks.get(i).toString());
         }
         System.out.println(DIVIDER);

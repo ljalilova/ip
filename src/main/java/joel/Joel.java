@@ -6,7 +6,8 @@ import java.util.Scanner;
 public class Joel {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = Storage.loadTasks();
+        int currentListIndex = tasks.size();
 
         Printer.printGreeting();
         String userInput = scanner.nextLine().trim();
@@ -24,16 +25,17 @@ public class Joel {
             } else if (commandTokens.length == 2 &&
                     (commandTokens[0].equals("mark") || commandTokens[0].equals("unmark"))) {
                 try {
-                    int index = Integer.parseInt(commandTokens[1]) - 1;
-                    if (index >= 0 && index < tasks.size()) {
-                        Task task = tasks.get(index);
+                    int index = Integer.parseInt(commandTokens[1]);
+                    if (index >= 1 && index <= tasks.size()) {
+                        Task task = tasks.get(index - 1);
                         if (commandTokens[0].equals("mark")) {
                             task.setDone();
-                            Printer.printMarkStatus(index + 1, task, true);
+                            Printer.printMarkStatus(index, task, true);
                         } else {
                             task.setUndone();
-                            Printer.printMarkStatus(index + 1, task, false);
+                            Printer.printMarkStatus(index, task, false);
                         }
+                        Storage.saveTasks(tasks);
                     } else {
                         Printer.printNoSuchTask();
                     }
@@ -64,6 +66,8 @@ public class Joel {
                         Task newTask = new ToDo(taskDesc);
                         tasks.add(newTask);
                         Printer.printTaskAdded(newTask, tasks.size());
+                        Storage.saveTasks(tasks);
+                        currentListIndex++;
                     }
                 }
 
@@ -75,6 +79,8 @@ public class Joel {
                         Task newTask = new Deadline(formatted[0], formatted[1]);
                         tasks.add(newTask);
                         Printer.printTaskAdded(newTask, tasks.size());
+                        Storage.saveTasks(tasks);
+                        currentListIndex++;
                     }
                 }
 
@@ -86,6 +92,8 @@ public class Joel {
                         Task newTask = new Event(formatted[0], formatted[1], formatted[2]);
                         tasks.add(newTask);
                         Printer.printTaskAdded(newTask, tasks.size());
+                        Storage.saveTasks(tasks);
+                        currentListIndex++;
                     }
                 }
 
