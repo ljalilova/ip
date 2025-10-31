@@ -1,109 +1,91 @@
 package joel;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Joel {
-    public static void main(String[] args) {
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
+
+    public Joel(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        tasks = new TaskList(storage.loadTasks());
+    }
+
+    public void run() {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = Storage.loadTasks();
-        int currentListIndex = tasks.size();
+        ui.showGreeting();
 
-        Printer.printGreeting();
-        String userInput = scanner.nextLine().trim();
+        String input = scanner.nextLine();
+        while (!input.equals("bye")) {
+            String[] tokens = Parser.parseCommand(input);
 
-        while (!userInput.equals("bye")) {
-            String[] commandTokens = userInput.split("\\s+");
+            if (tokens.length == 1 && tokens[0].equals("list")) {
+                ui.showTaskList(tasks.getAll());
 
-            if (commandTokens.length == 1 && userInput.equals("list")) {
-                if (tasks.isEmpty()) {
-                    Printer.printEmptyList();
-                } else {
-                    Printer.printTaskList(tasks);
-                }
-
-            } else if (commandTokens.length == 2 &&
-                    (commandTokens[0].equals("mark") || commandTokens[0].equals("unmark"))) {
+            } else if (tokens.length == 2 && (tokens[0].equals("mark") || tokens[0].equals("unmark"))) {
                 try {
-                    int index = Integer.parseInt(commandTokens[1]);
-                    if (index >= 1 && index <= tasks.size()) {
-                        Task task = tasks.get(index - 1);
-                        if (commandTokens[0].equals("mark")) {
-                            task.setDone();
-                            Printer.printMarkStatus(index, task, true);
-                        } else {
-                            task.setUndone();
-                            Printer.printMarkStatus(index, task, false);
-                        }
-                        Storage.saveTasks(tasks);
+                    int index = Integer.parseInt(tokens[1]) - 1;
+                    Task task = tasks.get(index);
+                    if (tokens[0].equals("mark")) {
+                        task.setDone();
+                        ui.showMarkStatus(index + 1, task, true);
                     } else {
-                        Printer.printNoSuchTask();
+                        task.setUndone();
+                        ui.showMarkStatus(index + 1, task, false);
                     }
-                } catch (NumberFormatException e) {
-                    Printer.printInvalidTaskNumber();
-                }
-
-            } else if (commandTokens[0].equals("delete") && commandTokens.length == 2) {
-                try {
-                    int index = Integer.parseInt(commandTokens[1]) - 1;
-                    if (index >= 0 && index < tasks.size()) {
-                        Task removed = tasks.remove(index);
-                        Printer.printTaskDeleted(removed, tasks.size());
-                    } else {
-                        Printer.printNoSuchTask();
-                    }
-                } catch (NumberFormatException e) {
-                    Printer.printInvalidTaskNumber();
+                    storage.saveTasks(tasks.getAll());
+                } catch (Exception e) {
+                    ui.showError("Invalid task number.");
                 }
 
             } else {
-                switch (commandTokens[0]) {
+                switch (tokens[0]) {
                 case "todo" -> {
-                    String taskDesc = TaskInputFormatter.formatToDo(commandTokens);
-                    if (taskDesc.isEmpty()) {
-                        Printer.printMissingTodoDescription();
+                    String desc = Parser.formatToDo(tokens);
+                    if (desc.isEmpty()) {
+                        ui.showError("Please specify a task after 'todo'.");
                     } else {
-                        Task newTask = new ToDo(taskDesc);
-                        tasks.add(newTask);
-                        Printer.printTaskAdded(newTask, tasks.size());
-                        Storage.saveTasks(tasks);
-                        currentListIndex++;
+                        Task task = new ToDo(desc);
+                        tasks.add(task);
+                        ui.showTaskAdded(task, tasks.size());
+                        storage.saveTasks(tasks.getAll());
                     }
                 }
-
                 case "deadline" -> {
-                    String[] formatted = TaskInputFormatter.formatDeadline(commandTokens);
-                    if (formatted.length == 0) {
-                        Printer.printInvalidDeadlineFormat();
+                    String[] parts = Parser.formatDeadline(tokens);
+                    if (parts.length == 0) {
+                        ui.showError("Invalid deadline format.");
                     } else {
-                        Task newTask = new Deadline(formatted[0], formatted[1]);
-                        tasks.add(newTask);
-                        Printer.printTaskAdded(newTask, tasks.size());
-                        Storage.saveTasks(tasks);
-                        currentListIndex++;
+                        Task task = new Deadline(parts[0], parts[1]);
+                        tasks.add(task);
+                        ui.showTaskAdded(task, tasks.size());
+                        storage.saveTasks(tasks.getAll());
                     }
                 }
-
                 case "event" -> {
-                    String[] formatted = TaskInputFormatter.formatEvent(commandTokens);
-                    if (formatted.length == 0) {
-                        Printer.printInvalidEventFormat();
+                    String[] parts = Parser.formatEvent(tokens);
+                    if (parts.length == 0) {
+                        ui.showError("Invalid event format.");
                     } else {
-                        Task newTask = new Event(formatted[0], formatted[1], formatted[2]);
-                        tasks.add(newTask);
-                        Printer.printTaskAdded(newTask, tasks.size());
-                        Storage.saveTasks(tasks);
-                        currentListIndex++;
+                        Task task = new Event(parts[0], parts[1], parts[2]);
+                        tasks.add(task);
+                        ui.showTaskAdded(task, tasks.size());
+                        storage.saveTasks(tasks.getAll());
                     }
                 }
-
-                default -> Printer.printUnknownCommand();
+                default -> ui.showUnknownCommand();
                 }
             }
 
-            userInput = scanner.nextLine().trim();
+            input = scanner.nextLine();
         }
 
-        Printer.printExitMessage();
+        ui.showExit();
+    }
+
+    public static void main(String[] args) {
+        new Joel("data/joel.txt").run();
     }
 }
