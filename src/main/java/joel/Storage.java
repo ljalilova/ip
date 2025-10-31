@@ -4,21 +4,25 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Storage {
-    private static final String FILE_PATH = "data/joel.txt";
+    private final String filePath;
 
-    public static ArrayList<Task> loadTasks() {
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public ArrayList<Task> loadTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
 
         if (!file.exists()) {
             try {
-                File folder = new File("data");
+                File folder = file.getParentFile();
                 if (!folder.exists()) {
-                    folder.mkdir();
+                    folder.mkdirs();
                 }
                 file.createNewFile();
             } catch (IOException e) {
-                System.out.println("Error creating joel.txt.");
+                System.out.println("Error creating file.");
                 return tasks;
             }
         }
@@ -26,82 +30,26 @@ public class Storage {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                try {
-                    Task task = parseLine(line);
-                    if (task != null) {
-                        tasks.add(task);
-                    }
-                } catch (Exception e) {
-                    // Skip corrupted lines
+                Task task = Parser.parseLine(line);
+                if (task != null) {
+                    tasks.add(task);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading joel.txt.");
+            System.out.println("Error reading file.");
         }
 
         return tasks;
     }
 
-    public static void saveTasks(ArrayList<Task> tasks) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+    public void saveTasks(ArrayList<Task> tasks) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Task task : tasks) {
-                writer.write(formatTask(task));
+                writer.write(Parser.formatTask(task));
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error saving to joel.txt.");
+            System.out.println("Error saving to file.");
         }
-    }
-
-    private static String formatTask(Task task) {
-        String type;
-        if (task instanceof ToDo) {
-            type = "T";
-        } else if (task instanceof Deadline) {
-            type = "D";
-        } else if (task instanceof Event) {
-            type = "E";
-        } else {
-            type = "?";
-        }
-
-        String status = task.getStatusIcon().equals("X") ? "1" : "0";
-        if (task instanceof Deadline d) {
-            return String.join(" | ", type, status, d.getDescription(), d.by);
-        } else if (task instanceof Event e) {
-            return String.join(" | ", type, status, e.getDescription(), e.from + " to " + e.to);
-        } else {
-            return String.join(" | ", type, status, task.getDescription());
-        }
-    }
-
-    private static Task parseLine(String line) {
-        String[] parts = line.split(" \\| ");
-        if (parts.length < 3) return null;
-
-        String type = parts[0];
-        boolean isDone = parts[1].equals("1");
-        String desc = parts[2];
-
-        Task task;
-        switch (type) {
-        case "T" -> task = new ToDo(desc);
-        case "D" -> {
-            if (parts.length < 4) return null;
-            task = new Deadline(desc, parts[3]);
-        }
-        case "E" -> {
-            if (parts.length < 4) return null;
-            String[] times = parts[3].split(" to ");
-            if (times.length != 2) return null;
-            task = new Event(desc, times[0], times[1]);
-        }
-        default -> task = null;
-        }
-
-        if (task != null && isDone) {
-            task.setDone();
-        }
-        return task;
     }
 }
