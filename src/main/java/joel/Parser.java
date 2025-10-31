@@ -1,5 +1,8 @@
 package joel;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
 public class Parser {
@@ -31,6 +34,19 @@ public class Parser {
         return new String[]{desc, from, to};
     }
 
+    public static LocalDateTime parseDateTime(String input) {
+        try {
+            DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            return LocalDateTime.parse(input, inputFormat);
+        } catch (DateTimeParseException e1) {
+            try {
+                return LocalDateTime.parse(input);
+            } catch (DateTimeParseException e2) {
+                return null;
+            }
+        }
+    }
+
     public static Task parseLine(String line) {
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) return null;
@@ -41,7 +57,11 @@ public class Parser {
 
         Task task = switch (type) {
             case "T" -> new ToDo(desc);
-            case "D" -> parts.length >= 4 ? new Deadline(desc, parts[3]) : null;
+            case "D" -> {
+                if (parts.length < 4) yield null;
+                LocalDateTime dateTime = parseDateTime(parts[3]);
+                yield dateTime != null ? new Deadline(desc, dateTime) : null;
+            }
             case "E" -> {
                 if (parts.length < 4) yield null;
                 String[] times = parts[3].split(" to ");
@@ -63,7 +83,7 @@ public class Parser {
 
         String status = task.getStatusIcon().equals("X") ? "1" : "0";
         if (task instanceof Deadline d) {
-            return String.join(" | ", type, status, d.getDescription(), d.by);
+            return String.join(" | ", type, status, d.getDescription(), d.by.toString());
         } else if (task instanceof Event e) {
             return String.join(" | ", type, status, e.getDescription(), e.from + " to " + e.to);
         } else {

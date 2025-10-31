@@ -56,12 +56,17 @@ public class Joel {
                 case "deadline" -> {
                     String[] parts = Parser.formatDeadline(tokens);
                     if (parts.length == 0) {
-                        ui.showError("Invalid deadline format.");
+                        ui.showError("Invalid deadline format. Use yyyy-MM-dd HH:mm");
                     } else {
-                        Task task = new Deadline(parts[0], parts[1]);
-                        tasks.add(task);
-                        ui.showTaskAdded(task, tasks.size());
-                        storage.saveTasks(tasks.getAll());
+                        var dateTime = Parser.parseDateTime(parts[1]);
+                        if (dateTime == null) {
+                            ui.showError("Could not parse date/time. Use format: yyyy-MM-dd HH:mm");
+                        } else {
+                            Task task = new Deadline(parts[0], dateTime);
+                            tasks.add(task);
+                            ui.showTaskAdded(task, tasks.size());
+                            storage.saveTasks(tasks.getAll());
+                        }
                     }
                 }
                 case "event" -> {
