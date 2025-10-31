@@ -1,5 +1,6 @@
 package joel;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Joel {
@@ -78,6 +79,15 @@ public class Joel {
                         tasks.add(task);
                         ui.showTaskAdded(task, tasks.size());
                         storage.saveTasks(tasks.getAll());
+                    }
+                }
+                case "find" -> {
+                    if (tokens.length < 2) {
+                        ui.showError("Please provide a keyword to search.");
+                    } else {
+                        String keyword = String.join(" ", Arrays.copyOfRange(tokens, 1, tokens.length));
+                        var matches = tasks.findTasks(keyword);
+                        ui.showMatchingTasks(matches);
                     }
                 }
                 default -> ui.showUnknownCommand();

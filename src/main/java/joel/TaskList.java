@@ -1,6 +1,7 @@
 package joel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskList {
     private final ArrayList<Task> tasks;
@@ -31,5 +32,15 @@ public class TaskList {
 
     public ArrayList<Task> getAll() {
         return tasks;
+    }
+
+    public List<Task> findTasks(String keyword) {
+        List<Task> matches = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                matches.add(task);
+            }
+        }
+        return matches;
     }
 }
