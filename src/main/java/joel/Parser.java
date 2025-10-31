@@ -5,17 +5,38 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
+/**
+ * Handles parsing of user input and file data into structured commands and task objects.
+ */
 public class Parser {
 
+    /**
+     * Splits a user input string into tokens.
+     *
+     * @param input The raw user input.
+     * @return An array of command tokens.
+     */
     public static String[] parseCommand(String input) {
         return input.trim().split("\\s+");
     }
 
+    /**
+     * Extracts the description from a todo command.
+     *
+     * @param tokens The command tokens.
+     * @return The task description.
+     */
     public static String formatToDo(String[] tokens) {
         if (tokens.length == 1) return "";
         return String.join(" ", Arrays.copyOfRange(tokens, 1, tokens.length));
     }
 
+    /**
+     * Extracts the description and deadline from a deadline command.
+     *
+     * @param tokens The command tokens.
+     * @return A string array with description and deadline time.
+     */
     public static String[] formatDeadline(String[] tokens) {
         int byIndex = Arrays.asList(tokens).indexOf("/by");
         if (byIndex <= 1 || byIndex == tokens.length - 1) return new String[0];
@@ -24,6 +45,12 @@ public class Parser {
         return new String[]{desc, by};
     }
 
+    /**
+     * Extracts the description, start time, and end time from an event command.
+     *
+     * @param tokens The command tokens.
+     * @return A string array with description, start time, and end time.
+     */
     public static String[] formatEvent(String[] tokens) {
         int fromIndex = Arrays.asList(tokens).indexOf("/from");
         int toIndex = Arrays.asList(tokens).indexOf("/to");
@@ -34,6 +61,13 @@ public class Parser {
         return new String[]{desc, from, to};
     }
 
+    /**
+     * Parses a date-time string into a LocalDateTime object.
+     * Supports both user input format and saved format.
+     *
+     * @param input The date-time string.
+     * @return A LocalDateTime object or null if parsing fails.
+     */
     public static LocalDateTime parseDateTime(String input) {
         try {
             DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -47,6 +81,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a line from the save file into a Task object.
+     *
+     * @param line The line from the file.
+     * @return A Task object or null if parsing fails.
+     */
     public static Task parseLine(String line) {
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) return null;
@@ -74,6 +114,12 @@ public class Parser {
         return task;
     }
 
+    /**
+     * Formats a Task object into a string suitable for saving to file.
+     *
+     * @param task The task to format.
+     * @return A formatted string.
+     */
     public static String formatTask(Task task) {
         String type;
         if (task instanceof ToDo) type = "T";

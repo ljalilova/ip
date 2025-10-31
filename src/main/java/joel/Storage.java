@@ -3,13 +3,26 @@ package joel;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Handles loading and saving tasks to a file.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Constructs a Storage object with the specified file path.
+     *
+     * @param filePath The path to the save file.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the file.
+     *
+     * @return A list of tasks loaded from the file.
+     */
     public ArrayList<Task> loadTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -42,6 +55,11 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves tasks to the file.
+     *
+     * @param tasks The list of tasks to save.
+     */
     public void saveTasks(ArrayList<Task> tasks) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Task task : tasks) {

@@ -2,21 +2,36 @@ package joel;
 
 import java.util.List;
 
+/**
+ * Handles all user interaction and output formatting.
+ */
 public class Ui {
     private static final String DIVIDER = "____________________________________________________________";
 
+    /**
+     * Displays the greeting message.
+     */
     public void showGreeting() {
         System.out.println(DIVIDER);
         System.out.println(" Hello! I'm Joel.\n What can I do for you?");
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays the exit message.
+     */
     public void showExit() {
         System.out.println(DIVIDER);
         System.out.println(" Bye. Hope to see you again soon!");
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays a message when a task is added.
+     *
+     * @param task  The task added.
+     * @param count The total number of tasks.
+     */
     public void showTaskAdded(Task task, int count) {
         System.out.println(DIVIDER);
         System.out.println(" Got it. I've added this task:");
@@ -25,6 +40,11 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays the full list of tasks.
+     *
+     * @param tasks The list of tasks.
+     */
     public void showTaskList(List<Task> tasks) {
         System.out.println(DIVIDER);
         if (tasks.isEmpty()) {
@@ -38,6 +58,13 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays the status of a marked or unmarked task.
+     *
+     * @param index  The task number.
+     * @param task   The task.
+     * @param isDone True if marked as done, false if unmarked.
+     */
     public void showMarkStatus(int index, Task task, boolean isDone) {
         System.out.println(DIVIDER);
         System.out.println(" Task " + index + " has been marked " + (isDone ? "completed." : "as not done."));
@@ -45,10 +72,18 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays an error message.
+     *
+     * @param message The error message.
+     */
     public void showError(String message) {
         System.out.println("Error: " + message);
     }
 
+    /**
+     * Displays a message for unknown commands.
+     */
     public void showUnknownCommand() {
         System.out.println(DIVIDER);
         System.out.println(" Sorry, I didn't understand that command.");
@@ -59,9 +94,15 @@ public class Ui {
         System.out.println("   - list");
         System.out.println("   - mark <task number>");
         System.out.println("   - unmark <task number>");
+        System.out.println("   - find <keyword(s)>");
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays matching tasks from a search.
+     *
+     * @param matches The list of matching tasks.
+     */
     public void showMatchingTasks(List<Task> matches) {
         System.out.println(DIVIDER);
         if (matches.isEmpty()) {

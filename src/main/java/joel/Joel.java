@@ -3,17 +3,28 @@ package joel;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * Main class that runs the chatbot application.
+ */
 public class Joel {
     private final Storage storage;
     private final TaskList tasks;
     private final Ui ui;
 
+    /**
+     * Constructs the chatbot with a given file path for storage.
+     *
+     * @param filePath The path to the data file.
+     */
     public Joel(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
         tasks = new TaskList(storage.loadTasks());
     }
 
+    /**
+     * Starts the chatbot interaction loop.
+     */
     public void run() {
         Scanner scanner = new Scanner(System.in);
         ui.showGreeting();
@@ -100,6 +111,11 @@ public class Joel {
         ui.showExit();
     }
 
+    /**
+     * Entry point of the application.
+     *
+     * @param args Command-line arguments.
+     */
     public static void main(String[] args) {
         new Joel("data/joel.txt").run();
     }
