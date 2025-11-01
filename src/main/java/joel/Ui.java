@@ -95,6 +95,7 @@ public class Ui {
         System.out.println("   - mark <task number>");
         System.out.println("   - unmark <task number>");
         System.out.println("   - find <keyword(s)>");
+        System.out.println("   - delete <task number>");
         System.out.println(DIVIDER);
     }
 
@@ -113,6 +114,14 @@ public class Ui {
                 System.out.println(" " + (i + 1) + "." + matches.get(i));
             }
         }
+        System.out.println(DIVIDER);
+    }
+
+    public void showTaskDeleted(Task task, int remainingCount) {
+        System.out.println(DIVIDER);
+        System.out.println(" Noted. I've removed this task:");
+        System.out.println("   " + task.toString());
+        System.out.println(" Now you have " + remainingCount + " tasks in the list.");
         System.out.println(DIVIDER);
     }
 }

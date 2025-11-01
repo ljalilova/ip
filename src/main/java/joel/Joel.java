@@ -101,6 +101,25 @@ public class Joel {
                         ui.showMatchingTasks(matches);
                     }
                 }
+                case "delete" -> {
+                    if (tokens.length != 2) {
+                        ui.showError("Please specify the task number to delete.");
+                    } else {
+                        try {
+                            int index = Integer.parseInt(tokens[1]) - 1;
+                            if (index >= 0 && index < tasks.size()) {
+                                Task removed = tasks.get(index);
+                                tasks.getAll().remove(index);
+                                ui.showTaskDeleted(removed, tasks.size());
+                                storage.saveTasks(tasks.getAll());
+                            } else {
+                                ui.showError("There is no such task.");
+                            }
+                        } catch (NumberFormatException e) {
+                            ui.showError("Please enter a valid task number.");
+                        }
+                    }
+                }
                 default -> ui.showUnknownCommand();
                 }
             }
