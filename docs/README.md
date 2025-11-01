@@ -84,7 +84,23 @@ Here are the tasks in your list:
 3.[E][ ] project meeting (from: Monday 2pm to Monday 4pm)
 
 ---
+###  Delete a task
 
+Delete a specific task from your list.
+
+**Command:**
+
+delete 1
+
+**Expected Output:**
+
+Noted. I've removed this task:
+
+[T][ ] homework
+
+Now you have 0 tasks in the list.
+
+---
 ###  Mark a Task as Done
 
 Mark a task as completed.
